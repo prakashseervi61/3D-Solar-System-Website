@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[97367,["/3D-Solar-System-Website/_next/static/chunks/2f236954d6a65e12.js"],"ViewportBoundary"]
+3:I[97367,["/3D-Solar-System-Website/_next/static/chunks/2f236954d6a65e12.js"],"MetadataBoundary"]
+4:"$Sreact.suspense"
+5:I[27201,["/3D-Solar-System-Website/_next/static/chunks/2f236954d6a65e12.js"],"IconMark"]
+0:{"buildId":"3QuO6U69F5RM9e1-HzMP5","rsc":["$","$1","h",{"children":[null,["$","$L2",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L3",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Journey Through the Solar System | 3D Interactive Experience"}],["$","meta","1",{"name":"description","content":"Embark on an immersive 3D scrolling journey through our Solar System. Explore the Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune with cinematic transitions and stunning visuals."}],["$","meta","2",{"name":"keywords","content":"solar system,3D,interactive,space,planets,astronomy,WebGL,Three.js"}],["$","link","3",{"rel":"icon","href":"/3D-Solar-System-Website/favicon.ico?favicon.0b3bf435.ico","sizes":"256x256","type":"image/x-icon"}],["$","$L5","4",{}]]}]}]}],null]}],"loading":null,"isPartial":false}

@@ -1,0 +1,14 @@
+/node_modules
+/.next/
+/out/
+.env*
+.DS_Store
+*.log
+.vercel
+solar-system-app/node_modules
+solar-system-app/.next
+solar-system-app/out
+solar-system-app/.env*
+solar-system-app/.DS_Store
+solar-system-app/*.log
+solar-system-app/.vercel
