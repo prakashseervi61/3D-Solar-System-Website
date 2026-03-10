@@ -1,0 +1,296 @@
+@import "tailwindcss";
+
+/* ===== Design System Tokens ===== */
+:root {
+  /* Primary Colors */
+  --deep-space: #0B1020;
+  --cosmic-black: #05070D;
+  --midnight-blue: #141B2D;
+  --starlight-white: #FFFFFF;
+
+  /* Secondary Colors */
+  --soft-gray: #C8CEDA;
+  --nebula-gray: #8B92A3;
+  --dark-panel: #1E263A;
+
+  /* Accent Colors */
+  --solar-orange: #FF7A1A;
+  --planet-blue: #4EDFFF;
+  --mars-red: #FF4D4D;
+  --saturn-gold: #D7A856;
+
+  /* Gradients */
+  --hero-gradient: linear-gradient(180deg, #05070D 0%, #0B1020 100%);
+  --cta-gradient: linear-gradient(135deg, #FF7A1A 0%, #FFB347 100%);
+
+  /* Typography */
+  --font-heading: 'Orbitron', sans-serif;
+  --font-body: 'Poppins', sans-serif;
+
+  /* Spacing */
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 40px;
+  --space-xl: 64px;
+  --space-xxl: 96px;
+}
+
+/* ===== Tailwind v4 Theme ===== */
+@theme inline {
+  --color-deep-space: #0B1020;
+  --color-cosmic-black: #05070D;
+  --color-midnight-blue: #141B2D;
+  --color-starlight-white: #FFFFFF;
+  --color-soft-gray: #C8CEDA;
+  --color-nebula-gray: #8B92A3;
+  --color-dark-panel: #1E263A;
+  --color-solar-orange: #FF7A1A;
+  --color-planet-blue: #4EDFFF;
+  --color-mars-red: #FF4D4D;
+  --color-saturn-gold: #D7A856;
+  --font-sans: 'Poppins', sans-serif;
+  --font-heading: 'Orbitron', sans-serif;
+}
+
+/* ===== Global Reset ===== */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--cosmic-black);
+  color: var(--starlight-white);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== Custom Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cosmic-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--nebula-gray);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--planet-blue);
+}
+
+/* ===== Typography Classes ===== */
+.font-heading {
+  font-family: var(--font-heading);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+/* ===== Button Styles ===== */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  height: 48px;
+  border-radius: 30px;
+  background: var(--cta-gradient);
+  color: var(--starlight-white);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  background: var(--mars-red);
+  box-shadow: 0 0 15px rgba(255, 77, 77, 0.4);
+  transform: scale(1.05);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px;
+  height: 42px;
+  border-radius: 30px;
+  background: transparent;
+  border: 2px solid var(--planet-blue);
+  color: var(--planet-blue);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-secondary:hover {
+  background: var(--planet-blue);
+  color: var(--deep-space);
+}
+
+/* ===== Card / Glass Panels ===== */
+.glass-panel {
+  background: rgba(30, 38, 58, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+/* ===== Scroll Indicator Animation ===== */
+@keyframes scrollBounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+.scroll-indicator {
+  animation: scrollBounce 2s ease-in-out infinite;
+}
+
+/* ===== Planet Info Panel Animation ===== */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.planet-info-enter {
+  animation: fadeSlideIn 0.6s ease-out forwards;
+}
+
+/* ===== Loading Screen ===== */
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(255, 122, 26, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(255, 122, 26, 0.8);
+  }
+}
+
+.loading-pulse {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ===== Canvas Container ===== */
+.canvas-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+}
+
+/* ===== Overlay Content ===== */
+.overlay-content {
+  position: relative;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.overlay-content>* {
+  pointer-events: auto;
+}
+
+/* ===== Journey Scroll Container ===== */
+#journey-container {
+  position: relative;
+}
+
+/* ===== Planet Scroll Sections ===== */
+.planet-section {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .planet-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    scroll-snap-align: center;
+  }
+
+  .font-heading {
+    letter-spacing: 1px;
+  }
+
+  /* Fixed Navbar offset on mobile */
+  .overlay-content {
+    margin-top: 80px;
+  }
+
+  .glass-panel-mobile {
+    background: rgba(20, 27, 45, 0.85);
+    /* Required mobile backdrop-color */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* Required mobile border */
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Enable snap for touch/scrolling */
+html {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+section {
+  scroll-snap-align: start;
+}
+
+#journey-container section {
+  scroll-snap-align: center;
+}
