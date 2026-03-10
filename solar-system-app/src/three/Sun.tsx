@@ -61,7 +61,7 @@ export default function Sun() {
 
             {/* Corona glow - Reduced size and opacity per cinematic feedback */}
             <mesh ref={coronaRef}>
-                <sphereGeometry args={[4.4, 32, 32]} />
+                <sphereGeometry args={[4.2, 32, 32]} />
                 <meshBasicMaterial
                     color="#FF8C00"
                     transparent
@@ -72,7 +72,7 @@ export default function Sun() {
 
             {/* Outer atmosphere glow - Reduced for better contrast with text */}
             <mesh>
-                <sphereGeometry args={[5.2, 32, 32]} />
+                <sphereGeometry args={[4.6, 32, 32]} />
                 <meshBasicMaterial
                     color="#FF6600"
                     transparent

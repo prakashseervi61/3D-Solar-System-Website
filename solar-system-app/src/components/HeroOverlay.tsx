@@ -26,7 +26,7 @@ export default function HeroOverlay() {
                 <div className="hidden md:block" />
 
                 {/* Column 2: Core Focus (Headline + CTA) */}
-                <div className="relative flex flex-col items-center text-center mt-[15vh] md:mt-0 w-full max-w-[600px] mx-auto">
+                <div className="relative flex flex-col items-center text-center mt-[5vh] md:mt-[-4vh] md:-translate-x-6 lg:-translate-x-10 w-full max-w-[620px] mx-auto">
 
                     {/* Localized Blur Just Behind Text for Readability without blocking the Sun */}
                     <div
@@ -41,23 +41,23 @@ export default function HeroOverlay() {
                     />
 
                     <h1
-                        className="relative z-10 text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-starlight-white mb-6 md:mb-8 leading-[1.3] md:leading-[1.15]"
+                        className="relative z-10 text-3xl sm:text-5xl md:text-6xl lg:text-[76px] font-bold text-starlight-white mb-4 md:mb-5 leading-[1.1] md:leading-[1.05]"
                         style={{
                             fontFamily: 'var(--font-heading)',
-                            letterSpacing: '2px',
+                            letterSpacing: '1px',
                         }}
                     >
                         JOURNEY THROUGH
                         <br />
-                        <span className="text-solar-orange flex flex-wrap justify-center items-center gap-x-2 gap-y-3 align-baseline mt-2 md:mt-0 relative pb-2 md:pb-0">
+                        <span className="text-solar-orange flex flex-wrap justify-center items-center gap-x-2 gap-y-1 align-baseline mt-2 md:mt-3 relative pb-2 md:pb-0">
                             <span>THE</span>
-                            <span className="bg-solar-orange/10 px-3 md:px-4 py-1.5 rounded-sm border border-solar-orange/30 text-solar-orange shadow-[0_0_15px_rgba(255,122,26,0.15)] leading-none md:-translate-y-1 mx-1 md:mx-0">SOLAR</span>
+                            <span className="bg-solar-orange/5 px-2 md:px-3 py-0.5 rounded-sm text-solar-orange shadow-[0_0_8px_rgba(255,122,26,0.1)] leading-none md:-translate-y-1 mx-1 md:mx-0">SOLAR</span>
                             <span>SYSTEM</span>
                         </span>
                     </h1>
 
                     <p
-                        className="relative z-10 text-soft-gray text-xs sm:text-sm md:text-lg max-w-sm md:max-w-lg mb-8 md:mb-10 leading-relaxed opacity-90"
+                        className="relative z-10 text-soft-gray text-xs sm:text-sm md:text-lg max-w-sm md:max-w-lg mb-6 md:mb-8 leading-relaxed opacity-90"
                         style={{ fontFamily: 'var(--font-body)' }}
                     >
                         Embark on a cinematic exploration through our cosmic neighborhood.
@@ -66,7 +66,7 @@ export default function HeroOverlay() {
 
                     <button
                         onClick={handleExplore}
-                        className="relative z-10 hero-btn-glow px-8 py-3 md:px-10 md:py-4 bg-solar-orange text-white rounded-full font-semibold tracking-wider transition-all duration-300 transform hover:scale-105 active:scale-95 text-xs md:text-base mt-2"
+                        className="relative z-10 hero-btn-glow px-8 py-3 md:px-12 md:py-4 bg-[#FF851B] text-white rounded-full font-bold tracking-[0.1em] transition-all duration-300 transform hover:scale-105 active:scale-95 text-xs md:text-base mt-2 shadow-[0_8px_25px_rgba(255,120,0,0.6)]"
                     >
                         EXPLORE NOW
                     </button>

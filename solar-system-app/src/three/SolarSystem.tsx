@@ -55,7 +55,7 @@ function CameraController() {
                 ),
                 lookAt: new THREE.Vector3(
                     planet.position[0], // Keep lookAt X centered
-                    planet.isSun ? (mobile ? -1.5 : 3.5) : planet.position[1], // Look down on mobile to push Sun UP. Look up on desktop to push Sun DOWN.
+                    planet.isSun ? (mobile ? -2.5 : 1.5) : planet.position[1], // Look lower to push Sun UP on the screen
                     planet.position[2]
                 ),
             };
