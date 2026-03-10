@@ -1,21 +1,12 @@
 import type { NextConfig } from "next";
 
-const isGithubActions = process.env.GITHUB_ACTIONS || false;
-
-let assetPrefix = '';
-let basePath = '';
-
-if (isGithubActions) {
-  // trim off `<owner>/`
-  const repo = process.env.GITHUB_REPOSITORY?.replace(/.*?\//, '') || '3D-Solar-System-Website';
-  assetPrefix = `/${repo}/`;
-  basePath = `/${repo}`;
-}
+const isProd = process.env.NODE_ENV === 'production';
+const repo = '3D-Solar-System-Website';
 
 const nextConfig: NextConfig = {
-  output: isGithubActions ? 'export' : undefined,
-  basePath: basePath || undefined,
-  assetPrefix: assetPrefix || undefined,
+  output: isProd ? 'export' : undefined,
+  basePath: isProd ? `/${repo}` : undefined,
+  assetPrefix: isProd ? `/${repo}/` : undefined,
 };
 
 export default nextConfig;
