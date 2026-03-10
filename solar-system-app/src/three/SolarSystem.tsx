@@ -38,13 +38,14 @@ function CameraController() {
             const mobile = isMobile.current;
 
             // On mobile, keep planet centered (x=0) and scaled responsibly (viewDist)
+            // On mobile, keep planet centered (x=0) and scaled responsibly (viewDist)
             // On mobile, the planet is slightly higher (y offset) to clear the bottom card
-            const viewDistMobile = planet.isSun ? 15 : planet.radius * 6 + 4;
-            const viewDistDesktop = planet.isSun ? 12 : planet.radius * 4 + 2;
+            const viewDistMobile = planet.isSun ? 16 : planet.radius * 6 + 4;
+            const viewDistDesktop = planet.isSun ? 15 : planet.radius * 4 + 2;
             const viewDist = mobile ? viewDistMobile : viewDistDesktop;
 
-            const yOffset = mobile ? planet.radius * 0.8 + 1 : planet.radius * 0.6 + 1;
-            const xOffset = mobile ? 0 : planet.radius * 1.2;
+            const yOffset = mobile ? planet.radius * 0.8 + 2 : planet.isSun ? planet.radius * 2.2 : planet.radius * 1.5;
+            const xOffset = mobile ? 0 : planet.isSun ? 0 : planet.radius * 1.2; // Keep Sun perfectly centered
 
             return {
                 position: new THREE.Vector3(
@@ -53,15 +54,15 @@ function CameraController() {
                     planet.position[2] + viewDist
                 ),
                 lookAt: new THREE.Vector3(
-                    planet.position[0],
-                    planet.position[1],
+                    planet.position[0], // Keep lookAt X centered
+                    planet.isSun ? (mobile ? -1.5 : 3.5) : planet.position[1], // Look down on mobile to push Sun UP. Look up on desktop to push Sun DOWN.
                     planet.position[2]
                 ),
             };
         });
     }, [isMobile.current]);
 
-    useFrame(() => {
+    useFrame((state) => {
         const totalPlanets = planetData.length;
         const lastIndex = totalPlanets - 1;
 
@@ -84,14 +85,21 @@ function CameraController() {
         targetPos.current.lerpVectors(from.position, to.position, easedT);
         targetLookAt.current.lerpVectors(from.lookAt, to.lookAt, easedT);
 
+        // CINEMATIC: "Space Warp" Zoom Effect
+        // While transitioning (near t=0.5), we slightly "zoom in" to the path
+        // by moving the camera closer to the lookAt target.
+        const zoomEffect = Math.sin(t * Math.PI) * 1.5; // peaks at t=0.5
+        const toTargetDir = new THREE.Vector3().subVectors(targetLookAt.current, targetPos.current).normalize();
+        targetPos.current.add(toTargetDir.multiplyScalar(zoomEffect));
+
         // Add subtle cinematic orbital drift when near a planet
         const nearness = 1 - Math.abs(easedT - 0.5) * 2; // peaks at snap points
-        const time = performance.now() * 0.0003;
-        const orbitRadius = planetData[currentPlanetIndex].radius * 0.3 * nearness;
+        const time = state.clock.elapsedTime * 0.3;
+        const orbitRadius = planetData[currentPlanetIndex].radius * 0.3 * nearness * (isMobile.current ? 0.5 : 1);
         targetPos.current.x += Math.sin(time) * orbitRadius;
         targetPos.current.y += Math.cos(time * 0.7) * orbitRadius * 0.3;
 
-        // Smooth damping — higher lerp factor for responsive feel
+        // Smooth damping
         smoothPos.current.lerp(targetPos.current, 0.08);
         smoothLookAt.current.lerp(targetLookAt.current, 0.08);
 
@@ -104,11 +112,26 @@ function CameraController() {
 
 function SceneContent() {
     const setIsLoading = useStore((s) => s.setIsLoading);
+    const scrollProgress = useStore((s) => s.scrollProgress);
+    const starfieldRef = useRef<THREE.Group>(null);
+    const dustRef = useRef<THREE.Group>(null);
 
     useEffect(() => {
         const timer = setTimeout(() => setIsLoading(false), 1200);
         return () => clearTimeout(timer);
     }, [setIsLoading]);
+
+    // Parallax background movement
+    useFrame(() => {
+        if (starfieldRef.current) {
+            // Layer 1 (Far): Very slow movement
+            starfieldRef.current.position.z = -scrollProgress * 500;
+        }
+        if (dustRef.current) {
+            // Layer 2 (Mid): Medium movement
+            dustRef.current.position.z = -scrollProgress * 1200;
+        }
+    });
 
     return (
         <>
@@ -123,9 +146,21 @@ function SceneContent() {
                 <Planet key={planet.id} data={planet} />
             ))}
 
-            {/* Space environment — optimized particle counts */}
-            <Starfield count={3000} />
-            <SpaceDust count={300} />
+            {/* Layer 1: Far Stars (Static-ish) */}
+            <group ref={starfieldRef}>
+                <Starfield count={2500} radiusMin={400} radiusMax={800} rotationSpeed={0.001} starSize={0.2} />
+            </group>
+
+            {/* Layer 2: Mid Stars (Parallax) */}
+            <group ref={dustRef}>
+                <Starfield count={1500} radiusMin={200} radiusMax={400} rotationSpeed={0.003} starSize={0.4} />
+                <SpaceDust count={200} rangeX={150} rangeY={100} rangeZ={600} rotationSpeed={0.005} />
+            </group>
+
+            {/* Layer 3: Near Dust (Fast Parallax) */}
+            <group>
+                <SpaceDust count={150} rangeX={100} rangeY={60} rangeZ={200} rotationSpeed={0.01} size={0.18} />
+            </group>
 
             {/* Camera controller */}
             <CameraController />

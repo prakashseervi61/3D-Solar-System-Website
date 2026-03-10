@@ -58,33 +58,33 @@ export default function Sun() {
                 <SunSurface />
             </Suspense>
 
-            {/* Corona glow */}
+            {/* Corona glow - Reduced size and opacity per cinematic feedback */}
             <mesh ref={coronaRef}>
-                <sphereGeometry args={[4.8, 32, 32]} />
+                <sphereGeometry args={[4.4, 32, 32]} />
                 <meshBasicMaterial
                     color="#FF8C00"
                     transparent
-                    opacity={0.15}
+                    opacity={0.12}
                     side={THREE.BackSide}
                 />
             </mesh>
 
-            {/* Outer atmosphere glow */}
+            {/* Outer atmosphere glow - Reduced for better contrast with text */}
             <mesh>
-                <sphereGeometry args={[6.5, 32, 32]} />
+                <sphereGeometry args={[5.2, 32, 32]} />
                 <meshBasicMaterial
                     color="#FF6600"
                     transparent
-                    opacity={0.06}
+                    opacity={0.04}
                     side={THREE.BackSide}
                 />
             </mesh>
 
-            {/* Sun as intensive light source */}
+            {/* Sun as intensive light source - Balanced intensity */}
             <pointLight
                 color="#FFF5E0"
-                intensity={350}
-                distance={600}
+                intensity={280}
+                distance={550}
                 decay={1.2}
             />
         </group>

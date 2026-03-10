@@ -12,13 +12,17 @@ function MiniMap() {
     if (scrollProgress < 0.01) return null;
 
     const handleClick = (index: number) => {
-        const container = document.getElementById('journey-container');
-        if (!container) return;
-        const totalHeight = container.scrollHeight;
-        const targetScroll = (index / (planetData.length - 1)) * totalHeight;
-        // Add offset for the hero section
-        const heroHeight = window.innerHeight;
-        window.scrollTo({ top: heroHeight + targetScroll, behavior: 'smooth' });
+        const targetSection = document.getElementById(`planet-${index}`);
+        if (!targetSection) return;
+
+        // Delegate scroll command to the active Lenis instance for perfect GSAP physics harmony.
+        // Bypassing GSAP/native APIs prevents "jump to wrong planet" layout calculation errors.
+        if ((window as any).lenis) {
+            (window as any).lenis.scrollTo(targetSection, { duration: 1.5, offset: 0 });
+        } else {
+            // Fallback for edge cases
+            targetSection.scrollIntoView({ behavior: 'smooth' });
+        }
     };
 
     return (
@@ -45,18 +49,18 @@ function MiniMap() {
                     {/* Dot */}
                     <div
                         className={`w-3 h-3 rounded-full border-2 transition-all duration-500 z-10 ${index === currentPlanetIndex
-                                ? 'border-planet-blue bg-planet-blue shadow-[0_0_12px_rgba(78,223,255,0.6)] scale-125'
-                                : index < currentPlanetIndex
-                                    ? 'border-planet-blue/50 bg-planet-blue/30'
-                                    : 'border-white/20 bg-transparent'
+                            ? 'border-planet-blue bg-planet-blue shadow-[0_0_12px_rgba(78,223,255,0.6)] scale-125'
+                            : index < currentPlanetIndex
+                                ? 'border-planet-blue/50 bg-planet-blue/30'
+                                : 'border-white/20 bg-transparent'
                             }`}
                     />
 
                     {/* Label */}
                     <span
                         className={`text-[10px] uppercase tracking-wider whitespace-nowrap transition-all duration-500 ${index === currentPlanetIndex
-                                ? 'text-planet-blue font-semibold translate-x-1'
-                                : 'text-nebula-gray/60'
+                            ? 'text-planet-blue font-semibold translate-x-1'
+                            : 'text-nebula-gray/60'
                             }`}
                         style={{ fontFamily: 'var(--font-body)' }}
                     >

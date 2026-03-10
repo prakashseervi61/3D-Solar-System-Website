@@ -4,17 +4,29 @@ import { useRef, useMemo, memo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-function Starfield({ count = 3000 }) {
+interface StarfieldProps {
+    count?: number;
+    radiusMin?: number;
+    radiusMax?: number;
+    rotationSpeed?: number;
+    starSize?: number;
+}
+
+function Starfield({
+    count = 2000,
+    radiusMin = 150,
+    radiusMax = 500,
+    rotationSpeed = 0.002,
+    starSize = 0.4
+}: StarfieldProps) {
     const pointsRef = useRef<THREE.Points>(null);
 
-    const { positions, colors, sizes } = useMemo(() => {
+    const { positions, colors } = useMemo(() => {
         const positions = new Float32Array(count * 3);
         const colors = new Float32Array(count * 3);
-        const sizes = new Float32Array(count);
 
         for (let i = 0; i < count; i++) {
-            // Distribute stars in a large sphere
-            const radius = 150 + Math.random() * 350;
+            const radius = radiusMin + Math.random() * (radiusMax - radiusMin);
             const theta = Math.random() * Math.PI * 2;
             const phi = Math.acos(2 * Math.random() - 1);
 
@@ -22,24 +34,18 @@ function Starfield({ count = 3000 }) {
             positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
             positions[i * 3 + 2] = radius * Math.cos(phi);
 
-            // Color variation: white to warm-white to blue-white
-            const brightness = 0.7 + Math.random() * 0.3;
-            const warmth = Math.random();
-            colors[i * 3] = brightness + warmth * 0.05;
+            const brightness = 0.6 + Math.random() * 0.4;
+            colors[i * 3] = brightness;
             colors[i * 3 + 1] = brightness;
-            colors[i * 3 + 2] = brightness + (1 - warmth) * 0.08;
-
-            // Size variation for depth
-            sizes[i] = 0.3 + Math.random() * 0.5;
+            colors[i * 3 + 2] = brightness + Math.random() * 0.1;
         }
 
-        return { positions, colors, sizes };
-    }, [count]);
+        return { positions, colors };
+    }, [count, radiusMin, radiusMax]);
 
-    // Very slow rotation for subtle movement
     useFrame((_, delta) => {
         if (pointsRef.current) {
-            pointsRef.current.rotation.y += delta * 0.003;
+            pointsRef.current.rotation.y += delta * rotationSpeed;
         }
     });
 
@@ -56,12 +62,13 @@ function Starfield({ count = 3000 }) {
                 />
             </bufferGeometry>
             <pointsMaterial
-                size={0.4}
+                size={starSize}
                 sizeAttenuation
                 vertexColors
                 transparent
-                opacity={0.85}
+                opacity={0.8}
                 depthWrite={false}
+                blending={THREE.AdditiveBlending}
             />
         </points>
     );

@@ -4,6 +4,8 @@ import { useRef, Suspense } from 'react';
 import { useFrame, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { PlanetData } from '@/utils/planetData';
+import useStore from '@/store/useStore';
+import planetData from '@/utils/planetData';
 
 interface PlanetProps {
     data: PlanetData;
@@ -11,6 +13,10 @@ interface PlanetProps {
 
 function PlanetSurface({ data }: { data: PlanetData }) {
     const meshRef = useRef<THREE.Mesh>(null);
+    const currentPlanetIndex = useStore((s) => s.currentPlanetIndex);
+    const isSnapped = useStore((s) => s.isSnapped);
+
+    const isActive = planetData[currentPlanetIndex]?.id === data.id;
 
     // Only load if textureUrl exists
     const texture = useLoader(THREE.TextureLoader, data.textureUrl || '/textures/mercury.png');
@@ -20,9 +26,20 @@ function PlanetSurface({ data }: { data: PlanetData }) {
         texture.colorSpace = THREE.SRGBColorSpace;
     }
 
-    useFrame(() => {
+    useFrame((state) => {
         if (meshRef.current) {
-            meshRef.current.rotation.y += data.rotationSpeed;
+            // Rotate faster when active
+            const rotationMultiplier = isActive && isSnapped ? 1.5 : 1.0;
+            meshRef.current.rotation.y += data.rotationSpeed * rotationMultiplier;
+
+            // Pulse/Scale up effect when active
+            const targetScale = isActive && isSnapped ? 1.05 : 1.0;
+            meshRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.08);
+
+            // Subtle orbital wobble
+            if (isActive && isSnapped) {
+                meshRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.05;
+            }
         }
     });
 
@@ -43,6 +60,10 @@ function PlanetSurface({ data }: { data: PlanetData }) {
 
 function PlanetRings({ data }: { data: PlanetData }) {
     const ringRef = useRef<THREE.Mesh>(null);
+    const currentPlanetIndex = useStore((s) => s.currentPlanetIndex);
+    const isSnapped = useStore((s) => s.isSnapped);
+
+    const isActive = planetData[currentPlanetIndex]?.id === data.id;
 
     // Use a fallback to ensure the hook always receives a string, even if empty
     // but better to only use this component if rings exist.
@@ -55,7 +76,11 @@ function PlanetRings({ data }: { data: PlanetData }) {
 
     useFrame(() => {
         if (ringRef.current) {
-            ringRef.current.rotation.z += 0.0005;
+            const rotationMultiplier = isActive && isSnapped ? 1.2 : 1.0;
+            ringRef.current.rotation.z += 0.0005 * rotationMultiplier;
+
+            const targetScale = isActive && isSnapped ? 1.03 : 1.0;
+            ringRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.08);
         }
     });
 

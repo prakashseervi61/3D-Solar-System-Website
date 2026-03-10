@@ -73,6 +73,8 @@ body {
   font-family: var(--font-body);
   line-height: 1.6;
   overflow-x: hidden;
+  overscroll-behavior-y: none;
+  /* Prevent bounce artifacts on mobile */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -128,7 +130,23 @@ body {
 .btn-primary:hover {
   background: var(--mars-red);
   box-shadow: 0 0 15px rgba(255, 77, 77, 0.4);
-  transform: scale(1.05);
+  transform: translateY(-2px);
+}
+
+.hero-btn-glow {
+  box-shadow: 0 0 20px rgba(255, 122, 26, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.hero-btn-glow:hover {
+  box-shadow: 0 0 40px rgba(255, 122, 26, 0.5);
+  background: #FF6600 !important;
+  color: white;
+}
+
+.bg-radial-intro {
+  background: radial-gradient(circle at center, rgba(11, 16, 32, 0.8) 0%, transparent 70%);
 }
 
 .btn-secondary {
@@ -244,8 +262,11 @@ body {
 /* ===== Planet Scroll Sections ===== */
 .planet-section {
   height: 100vh;
+  height: 100dvh;
+  /* Dynamic viewport height for mobile browsers */
   width: 100%;
   position: relative;
+  scroll-snap-align: center;
 }
 
 /* ===== Responsive ===== */
@@ -263,10 +284,7 @@ body {
     letter-spacing: 1px;
   }
 
-  /* Fixed Navbar offset on mobile */
-  .overlay-content {
-    margin-top: 80px;
-  }
+  /* Removed fixed offset - handled by padding in components now */
 
   .glass-panel-mobile {
     background: rgba(20, 27, 45, 0.85);
@@ -283,14 +301,20 @@ body {
 
 /* Enable snap for touch/scrolling */
 html {
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+  scroll-behavior: auto;
 }
 
 section {
-  scroll-snap-align: start;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
 }
 
 #journey-container section {
   scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
+#home {
+  scroll-snap-align: start;
 }

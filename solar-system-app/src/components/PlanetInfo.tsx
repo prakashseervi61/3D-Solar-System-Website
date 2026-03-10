@@ -1,6 +1,6 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useState, useEffect } from 'react';
 import useStore from '@/store/useStore';
 import planetData from '@/utils/planetData';
 import { Globe, Ruler, Navigation, Clock, Sparkles } from 'lucide-react';
@@ -8,12 +8,23 @@ import { Globe, Ruler, Navigation, Clock, Sparkles } from 'lucide-react';
 function PlanetInfo() {
     const currentPlanetIndex = useStore((s) => s.currentPlanetIndex);
     const isSnapped = useStore((s) => s.isSnapped);
-    const scrollProgress = useStore((s) => s.scrollProgress);
-
     const planet = planetData[currentPlanetIndex];
 
-    // Show the panel when snapped to a planet (not during transitions)
-    const isVisible = isSnapped;
+    // Local state to hide the card on the initial landing Hero section
+    const [isHero, setIsHero] = useState(true);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            // If we haven't scrolled past half the screen, we're still on the Hero
+            setIsHero(window.scrollY < window.innerHeight * 0.5);
+        };
+        window.addEventListener('scroll', handleScroll);
+        handleScroll(); // Check immediately on mount
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    // Show the panel when snapped to a planet AND we are not on the hero landing page
+    const isVisible = isSnapped && !isHero;
 
     if (!planet) return null;
 
@@ -22,14 +33,21 @@ function PlanetInfo() {
             className={`fixed z-30 transition-all duration-700 ease-out 
         /* Mobile Position (Center Bottom) */
         bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-[420px]
-        /* Desktop Position (Right Center) */
-        md:bottom-auto md:top-1/2 md:right-12 md:left-auto md:translate-x-0 md:-translate-y-1/2 md:max-w-sm
+        /* Desktop Position (Far Right Center) */
+        md:bottom-auto md:top-1/2 md:right-4 md:left-auto md:translate-x-0 md:-translate-y-1/2 md:max-w-[360px]
         ${isVisible
                     ? 'opacity-100 translate-y-0 md:translate-x-0'
-                    : 'opacity-0 translate-y-8 md:translate-x-12 pointer-events-none'
+                    : 'opacity-0 translate-y-8 md:translate-x-32 pointer-events-none'
                 }`}
         >
-            <div className="glass-panel-mobile md:glass-panel">
+            <div
+                className="p-6 md:p-8 rounded-[12px] border border-white/10"
+                style={{
+                    background: 'rgba(20, 20, 20, 0.5)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                }}
+            >
                 {/* Planet Name */}
                 <h2
                     className="text-[28px] md:text-3xl font-semibold md:font-bold text-starlight-white mb-3 md:mb-2 uppercase tracking-wide md:tracking-wider leading-tight"

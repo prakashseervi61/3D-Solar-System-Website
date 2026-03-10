@@ -21,13 +21,22 @@ export default function useScrollCamera() {
     const isLoading = useStore((s) => s.isLoading);
 
     useEffect(() => {
-        // Initialize Lenis smooth scrolling (only once on mount)
+        // Initialize Lenis smooth scrolling with cinematic inertia
         const lenis = new Lenis({
-            duration: 1.4,
+            duration: 1.6, // Longer duration for floating feel
             easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smoothWheel: true,
+            touchMultiplier: 1.5,
+            infinite: false,
         });
         lenisRef.current = lenis;
+        (window as any).lenis = lenis; // Expose globally to fix scroll jumping issues
+
+        // Pause/Resume Lenis based on isLoading state
+        if (isLoading) {
+            lenis.stop();
+        } else {
+            lenis.start();
+        }
 
         // Connect Lenis to GSAP ScrollTrigger
         lenis.on('scroll', ScrollTrigger.update);
@@ -36,9 +45,9 @@ export default function useScrollCamera() {
         });
         gsap.ticker.lagSmoothing(0);
 
-        // Calculate snap points — one per planet
+        // Calculate snap points — one per planet stop
         const totalPlanets = planetData.length;
-        const snapPoints = Array.from({ length: totalPlanets }, (_, i) => i / (totalPlanets - 1));
+        const sectionSnapPoints = Array.from({ length: totalPlanets }, (_, i) => i / (totalPlanets - 1));
 
         // Create the main scrolling timeline
         const journeyEl = document.getElementById('journey-container');
@@ -47,32 +56,36 @@ export default function useScrollCamera() {
         // Snap timer — detect when user stops scrolling (snapped)
         let snapTimer: ReturnType<typeof setTimeout> | null = null;
 
-        ScrollTrigger.create({
+        const mainST = ScrollTrigger.create({
             trigger: journeyEl,
             start: 'top top',
             end: 'bottom bottom',
-            scrub: 0.8,
+            scrub: 1.2, // Higher scrub for smoother "Space Float"
             snap: {
-                snapTo: snapPoints,
-                duration: { min: 0.4, max: 0.8 },
-                ease: 'power2.inOut',
+                snapTo: sectionSnapPoints,
+                duration: { min: 0.5, max: 1.2 },
+                ease: 'power3.inOut', // Cinematic snap
                 delay: 0.1,
             },
             onUpdate: (self) => {
                 const progress = self.progress;
                 setScrollProgress(progress);
 
-                // Calculate current planet index from progress
+                // Calculate current planet index
                 const planetIndex = Math.round(progress * (totalPlanets - 1));
                 setCurrentPlanetIndex(Math.max(0, Math.min(planetIndex, totalPlanets - 1)));
 
-                // Mark as not snapped during scrolling
+                // Mark as not snapped during transitions
                 setIsSnapped(false);
                 if (snapTimer) clearTimeout(snapTimer);
                 snapTimer = setTimeout(() => {
                     setIsSnapped(true);
                 }, 400);
             },
+            onSnapComplete: () => {
+                // Ensure floating inertia is handled nicely after snap
+                setIsSnapped(true);
+            }
         });
 
         // RAF loop
@@ -88,7 +101,7 @@ export default function useScrollCamera() {
         return () => {
             if (snapTimer) clearTimeout(snapTimer);
             if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-            ScrollTrigger.getAll().forEach((t) => t.kill());
+            mainST.kill();
             gsap.ticker.remove(lenis.raf);
             lenis.destroy();
         };

@@ -18,7 +18,7 @@ export default function Navbar() {
 
     const navLinks = [
         { label: 'Home', href: '#home' },
-        { label: 'Planets', href: '#journey' },
+        { label: 'Planets', href: '#planet-0' },
         { label: 'About', href: '#about' },
         { label: 'Credits', href: '#credits' },
     ];
@@ -28,7 +28,12 @@ export default function Navbar() {
         setIsMobileMenuOpen(false);
         const target = document.querySelector(href);
         if (target) {
-            target.scrollIntoView({ behavior: 'smooth' });
+            // Use Lenis for native physics-based scrolls instead of simple scrollIntoView
+            if ((window as any).lenis) {
+                (window as any).lenis.scrollTo(target, { duration: 1.5, offset: 0 });
+            } else {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
         }
     };
 
@@ -36,8 +41,8 @@ export default function Navbar() {
         <>
             <nav
                 className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled
-                        ? 'bg-deep-space/95 backdrop-blur-md border-b border-white/5'
-                        : 'bg-transparent'
+                    ? 'bg-deep-space/95 backdrop-blur-md border-b border-white/5'
+                    : 'bg-transparent'
                     }`}
                 style={{ height: '80px' }}
             >
@@ -87,8 +92,8 @@ export default function Navbar() {
             {/* Mobile Menu Overlay */}
             <div
                 className={`fixed inset-0 z-40 bg-cosmic-black/98 backdrop-blur-lg flex flex-col items-center justify-center gap-8 transition-all duration-500 md:hidden ${isMobileMenuOpen
-                        ? 'opacity-100 pointer-events-auto'
-                        : 'opacity-0 pointer-events-none'
+                    ? 'opacity-100 pointer-events-auto'
+                    : 'opacity-0 pointer-events-none'
                     }`}
             >
                 {navLinks.map((link) => (
