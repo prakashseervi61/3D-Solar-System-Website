@@ -25,7 +25,8 @@ export default function useScrollCamera() {
         const lenis = new Lenis({
             duration: 1.6, // Longer duration for floating feel
             easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            touchMultiplier: 1.5,
+            touchMultiplier: 2.0, // Increase touch sensitivity for swipes
+            syncTouch: true, // Hijack native touch for perfect GSAP physics translation
             infinite: false,
         });
         lenisRef.current = lenis;
