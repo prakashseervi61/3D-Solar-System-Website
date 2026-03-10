@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import type { PlanetData } from '@/utils/planetData';
 import useStore from '@/store/useStore';
 import planetData from '@/utils/planetData';
+import { getAssetPath } from '@/utils/basePath';
 
 interface PlanetProps {
     data: PlanetData;
@@ -19,7 +20,7 @@ function PlanetSurface({ data }: { data: PlanetData }) {
     const isActive = planetData[currentPlanetIndex]?.id === data.id;
 
     // Only load if textureUrl exists
-    const texture = useLoader(THREE.TextureLoader, data.textureUrl || '/textures/mercury.png');
+    const texture = useLoader(THREE.TextureLoader, getAssetPath(data.textureUrl || '/textures/mercury.png'));
 
     if (texture) {
         texture.anisotropy = 16;
@@ -67,7 +68,7 @@ function PlanetRings({ data }: { data: PlanetData }) {
 
     // Use a fallback to ensure the hook always receives a string, even if empty
     // but better to only use this component if rings exist.
-    const ringTexture = useLoader(THREE.TextureLoader, data.ringTextureUrl || '/textures/saturn_rings.png');
+    const ringTexture = useLoader(THREE.TextureLoader, getAssetPath(data.ringTextureUrl || '/textures/saturn_rings.png'));
 
     if (ringTexture) {
         ringTexture.anisotropy = 16;

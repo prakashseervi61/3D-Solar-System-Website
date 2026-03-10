@@ -3,12 +3,13 @@
 import { useRef, Suspense } from 'react';
 import { useFrame, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
+import { getAssetPath } from '@/utils/basePath';
 
 function SunSurface() {
     const sunRef = useRef<THREE.Mesh>(null);
 
     // High-res solar plasma texture
-    const texture = useLoader(THREE.TextureLoader, '/textures/sun.png');
+    const texture = useLoader(THREE.TextureLoader, getAssetPath('/textures/sun.png'));
 
     if (texture) {
         texture.anisotropy = 16;
